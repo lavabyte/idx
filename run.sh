@@ -5,4 +5,4 @@ if [ ! -d "./root" ]; then
     printf "exit" | bash root.sh
     mv ../vm.sh root/
 fi
-printf "bash vm.sh" | bash root/root.sh
+printf "bash vm.sh" | bash root.sh
