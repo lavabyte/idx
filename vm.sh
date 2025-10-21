@@ -1,6 +1,15 @@
 #!/bin/bash
 set -e
 
+if ! dpkg -l wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>&1; then
+    apt install -y qemu-system-x86 qemu-utils cloud-image-utils genisoimage
+fi
+
+if [[ -f "./vm.sh" ]]; then
+    mkdir -p ./root/
+    mv ./vm.sh ./root/
+fi
+
 IMG_FILE="./ubuntu-vm.img"
 SEED_FILE="./ubuntu-seed.iso"
 IMG_URL="https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
