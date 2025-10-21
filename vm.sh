@@ -2,7 +2,7 @@
 set -e
 
 if ! dpkg -l wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>&1; then
-    apt update && apt install -y qemu-system-x86 qemu-utils cloud-image-utils genisoimage
+    DEBIAN_FRONTEND=noninteractive apt update && apt install -y qemu-system-x86 qemu-utils cloud-image-utils genisoimage
 fi
 
 if [[ -f "./vm.sh" ]]; then
