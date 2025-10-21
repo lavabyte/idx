@@ -28,10 +28,13 @@ chpasswd:
   list: |
     user:123
   expire: false
+runcmd:
+  - systemctl enable serial-getty@ttyS0.service
+  - systemctl start serial-getty@ttyS0.service
 EOF
     cat > meta-data <<EOF
 instance-id: iid-ubuntu-vm
-local-hostname: ubuntu-vm
+local-hostname: lavabyte-vm
 EOF
     cloud-localds "$SEED_FILE" user-data meta-data >/dev/null 2>&1
     rm -f user-data meta-data
