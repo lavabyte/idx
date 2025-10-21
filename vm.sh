@@ -38,7 +38,6 @@ EOF
 fi
 
 qemu-system-x86_64 \
-    -enable-kvm \
     -m 16384 \
     -smp 4 \
     -drive "file=$IMG_FILE,format=qcow2,if=virtio" \
