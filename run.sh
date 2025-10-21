@@ -12,10 +12,10 @@ else
   printf "Unsupported CPU architecture: ${ARCH}"
   exit 1
 fi
-wget --tries=$max_retries --timeout=$timeout --no-hsts -O rootfs.tar.gz "https://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.1-base-${ARCH_ALT}.tar.gz"
-tar -xf rootfs.tar.gz -C $ROOTFS_DIR
-rm rootfs.tar.gz
 if [ ! -e $ROOTFS_DIR/.installed ]; then
+  wget --tries=$max_retries --timeout=$timeout --no-hsts -O rootfs.tar.gz "https://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.1-base-${ARCH_ALT}.tar.gz"
+  tar -xf rootfs.tar.gz -C $ROOTFS_DIR
+  rm rootfs.tar.gz
   mkdir $ROOTFS_DIR/usr/local/bin -p
   wget --tries=$max_retries --timeout=$timeout --no-hsts -O $ROOTFS_DIR/usr/local/bin/proot "https://raw.githubusercontent.com/lavabyte/root/main/proot-${ARCH}"
   while [ ! -s "$ROOTFS_DIR/usr/local/bin/proot" ]; do
