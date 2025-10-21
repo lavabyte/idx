@@ -35,8 +35,8 @@ if [ ! -e $ROOTFS_DIR/.installed ]; then
   touch $ROOTFS_DIR/.installed
 fi
 clear
-if [[ -f "./vm.sh" ]]; then
-    mv ./vm.sh ./
+if [[ -f "vm.sh" ]]; then
+    mv vm.sh root/
 fi
 $ROOTFS_DIR/usr/local/bin/proot \
   --rootfs="${ROOTFS_DIR}" \
