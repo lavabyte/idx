@@ -2,7 +2,7 @@
 set -e
 
 if ! dpkg -l wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>&1; then
-    apt update && DEBIAN_FRONTEND=noninteractive apt install -y qemu-system-x86 qemu-utils cloud-image-utils genisoimage
+    apt update && DEBIAN_FRONTEND=noninteractive apt install -y qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>/dev/null
 fi
 
 IMG_FILE="./ubuntu-vm.img"
@@ -10,7 +10,7 @@ SEED_FILE="./ubuntu-seed.iso"
 IMG_URL="https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
 
 if [[ ! -f "$IMG_FILE" ]]; then
-    wget -q "$IMG_URL" -O "$IMG_FILE"
+    wget -q "$IMG_URL" -O "$IMG_FILE" >/dev/null 2>/dev/null
     qemu-img resize "$IMG_FILE" 20G >/dev/null 2>&1
 fi
 
@@ -38,8 +38,10 @@ EOF
 fi
 
 qemu-system-x86_64 \
+    -enable-kvm \
     -m 16384 \
-    -smp 4 \
+    -smp 2 \
+    -cpu host \
     -drive "file=$IMG_FILE,format=qcow2,if=virtio" \
     -drive "file=$SEED_FILE,format=raw,if=virtio" \
     -boot order=c \
