@@ -1,3 +1,4 @@
+cd root
 if [ ! -d "./root" ]; then
     git clone https://github.com/lavabyte/root
     cd root
