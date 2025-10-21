@@ -48,4 +48,7 @@ qemu-system-x86_64 \
     -smp 4 \
     -drive "file=$IMG_FILE,format=qcow2,if=virtio" \
     -drive "file=$SEED_FILE,format=raw,if=virtio" \
+    -boot order=c \
+    -device virtio-net-pci,netdev=n0 \
+    -netdev user,id=n0,hostfwd=tcp::2222-:22 \
     -nographic
