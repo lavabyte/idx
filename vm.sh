@@ -21,6 +21,9 @@ chpasswd:
     root:123
     user:123
   expire: false
+runcmd:
+  - systemctl enable ssh
+  - systemctl start ssh
 EOF
 cat > "meta-data" <<EOF
 instance-id: lavabyte-vm
