@@ -2,7 +2,7 @@
 if ! dpkg -l wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>&1; then
     apt update && DEBIAN_FRONTEND=noninteractive apt install -y wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>/dev/null
 fi
-wget -O "base.qcow2" "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+wget -O "disk.qcow2" "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
 cat > user-data <<EOF
 #cloud-config
 hostname: lavabyte-vm
@@ -23,15 +23,15 @@ cat > "meta-data" <<EOF
 instance-id: lavabyte-vm
 local-hostname: lavabyte
 EOF
-genisoimage -output "seed.img" -volid cidata -joliet -rock "user-data" "meta-data"
+genisoimage -output "conf.img" -volid cidata -joliet -rock "user-data" "meta-data"
 rm -f meta-data user-data
 qemu-system-x86_64 \
     -enable-kvm \
     -m 2048 \
     -cpu host \
     -smp 2 \
-    -drive file="base.qcow2",format=qcow2,if=virtio \
-    -drive file="seed.img",format=raw,if=virtio \
+    -drive file="disk.qcow2",format=qcow2,if=virtio \
+    -drive file="conf.img",format=raw,if=virtio \
     -netdev user,id=net0,hostfwd=tcp::2224-:22 \
     -device virtio-net-pci,netdev=net0 \
     -nographic \
