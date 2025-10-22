@@ -25,9 +25,10 @@ users:
   - name: user
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
-    password: $(openssl passwd -6 "123")
+    password: $(openssl passwd -6 "123" | tr -d '\n')
 chpasswd:
   list: |
+    root:123
     user:123
   expire: false
 EOF
