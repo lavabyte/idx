@@ -28,7 +28,8 @@ write_files:
         ServerAliveCountMax 3
     permissions: '0644'
 runcmd:
-  - sleep 30
+  - systemctl enable ssh
+  - systemctl start ssh
   - sudo -u user nohup ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -R 22:localhost:22 serveo.net >/dev/null 2>&1 &
 EOF
 cat > "meta-data" <<EOF
