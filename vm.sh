@@ -29,7 +29,7 @@ write_files:
 runcmd:
   - systemctl enable ssh
   - systemctl start ssh
-  - sudo -u user nohup ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -R 22:localhost:22 serveo.net >/root/.ssh-server 2>&1 &
+  - echo "read -p 'SSH hostname: ' HOST && ssh -R '${HOST}:22:localhost:22' serveo.net &" > /home/user/ssh-tunnel.sh
 EOF
 cat > "meta-data" <<EOF
 instance-id: lavabyte-vm
