@@ -1,4 +1,4 @@
-cd root
+cd root >/dev/null 2>/dev/null
 if [ ! -d "./root" ]; then
     git clone https://github.com/lavabyte/root >/dev/null 2>/dev/null
     cd root
