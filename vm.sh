@@ -2,7 +2,10 @@
 if ! dpkg -l wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>&1; then
     apt update && DEBIAN_FRONTEND=noninteractive apt install -y wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>/dev/null
 fi
-wget -O "disk.qcow2" "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+if [[ ! -f "disk.qcow2" ]]; then
+    wget -O "disk.qcow2" "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+    qemu-img resize "disk.qcow2" 20G
+fi
 cat > user-data <<EOF
 #cloud-config
 hostname: lavabyte-vm
@@ -18,19 +21,6 @@ chpasswd:
     root:123
     user:123
   expire: false
-write_files:
-  - path: /etc/ssh/ssh_config.d/serveo.conf
-    content: |
-      Host serveo.net
-        StrictHostKeyChecking no
-        UserKnownHostsFile /dev/null
-        ServerAliveInterval 60
-        ServerAliveCountMax 3
-    permissions: '0644'
-runcmd:
-  - systemctl enable ssh
-  - systemctl start ssh
-  - echo "read -p 'SSH hostname: ' HOST && ssh -R '${HOST}:22:localhost:22' serveo.net &" > /home/user/ssh-tunnel.sh
 EOF
 cat > "meta-data" <<EOF
 instance-id: lavabyte-vm
