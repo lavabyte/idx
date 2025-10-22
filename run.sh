@@ -4,5 +4,5 @@ if [ ! -d "./root" ]; then
     printf "echo -e '\nbash vm.sh' >> .bashrc && echo -e '\nexit' >> .bashrc && exit" | bash root.sh >/dev/null 2>/dev/null
     mv ../vm.sh root/
 fi
-read -p "SSH hostname: " HOSTNAME; printf '%s\n' "$HOSTNAME" > /root/.ssh-hostname
+read -p "SSH hostname: " HOSTNAME; printf '%s\n' "$HOSTNAME" > root/root/.ssh-hostname
 bash root.sh
