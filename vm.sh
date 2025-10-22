@@ -17,8 +17,9 @@ fi
 if [[ ! -f "$SEED_FILE" ]]; then
     cat > user-data <<EOF
 #cloud-config
-hostname: ubuntu-vm
+hostname: lavabyte-vm
 ssh_pwauth: true
+disable-root: false
 users:
   - name: user
     sudo: ALL=(ALL) NOPASSWD:ALL
@@ -26,11 +27,9 @@ users:
     password: "$(openssl passwd -6 '123' | tr -d '\n')"
 chpasswd:
   list: |
+    root:123
     user:123
   expire: false
-runcmd:
-  - systemctl enable serial-getty@ttyS0.service
-  - systemctl start serial-getty@ttyS0.service
 EOF
     cat > meta-data <<EOF
 instance-id: iid-ubuntu-vm
