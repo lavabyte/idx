@@ -1,4 +1,5 @@
 #!/bin/bash
+read -r SSHH < .ssh-hostname
 if ! dpkg -l wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>&1; then
     apt update && DEBIAN_FRONTEND=noninteractive apt install -y wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>/dev/null
 fi
@@ -29,7 +30,7 @@ write_files:
 runcmd:
   - systemctl enable ssh
   - systemctl start ssh
-  - sudo -u user nohup ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -R 22:localhost:22 serveo.net >/dev/null 2>&1 &
+  - sudo -u user nohup ssh -o ServerAliveInterval=60 -o ServerAliveCountMax=3 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -R $SSHH:22:localhost:22 serveo.net >/root/.ssh-server 2>&1 &
 EOF
 cat > "meta-data" <<EOF
 instance-id: lavabyte-vm
