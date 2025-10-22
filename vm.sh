@@ -1,24 +1,11 @@
 #!/bin/bash
-set -euo pipefail
-
 if ! dpkg -l wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>&1; then
     apt update && DEBIAN_FRONTEND=noninteractive apt install -y wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev/null 2>/dev/null
 fi
-
-IMG_URL="https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-
-IMG_FILE="ubuntu.img"
-SEED_FILE="ubuntu-seed.iso"
-
-if [[ ! -f "$IMG_FILE" ]]; then
-    wget --progress=bar:force -O "$IMG_FILE" "$IMG_URL"
-fi
-
-qemu-img resize "$IMG_FILE" "20G"
-
+wget -O "base.qcow2" "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
 cat > user-data <<EOF
 #cloud-config
-hostname: lavabyte
+hostname: lavabyte-vm
 ssh_pwauth: true
 disable_root: false
 users:
@@ -32,28 +19,20 @@ chpasswd:
     user:123
   expire: false
 EOF
-
-cat > meta-data <<EOF
-instance-id: iid-ubuntu
+cat > "meta-data" <<EOF
+instance-id: lavabyte-vm
 local-hostname: lavabyte
 EOF
-
-cloud-localds "$SEED_FILE" user-data meta-data
-
-rm -f user-data meta-data
-
+genisoimage -output "seed.img" -volid cidata -joliet -rock "user-data" "meta-data"
+rm -f meta-data user-data
 qemu-system-x86_64 \
     -enable-kvm \
-    -m "16384" \
-    -smp "2" \
+    -m 2048 \
     -cpu host \
-    -drive "file=$IMG_FILE,format=qcow2,if=virtio" \
-    -drive "file=$SEED_FILE,format=raw,if=virtio" \
-    -boot order=c \
-    -device virtio-net-pci,netdev=n0 \
-    -netdev "user,id=n0,hostfwd=tcp::2222-:22" \
+    -smp 2 \
+    -drive file="base.qcow2",format=qcow2,if=virtio \
+    -drive file="seed.img",format=raw,if=virtio \
+    -netdev user,id=net0,hostfwd=tcp::2224-:22 \
+    -device virtio-net-pci,netdev=net0 \
     -nographic \
-    -serial mon:stdio \
-    -device virtio-balloon-pci \
-    -object rng-random,filename=/dev/urandom,id=rng0 \
-    -device virtio-rng-pci,rng=rng0
+    -name "lavabyte-vm"
