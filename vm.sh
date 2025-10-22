@@ -19,12 +19,12 @@ if [[ ! -f "$SEED_FILE" ]]; then
 #cloud-config
 hostname: lavabyte-vm
 ssh_pwauth: true
-disable-root: false
+disable_root: false
 users:
   - name: user
     sudo: ALL=(ALL) NOPASSWD:ALL
     shell: /bin/bash
-    password: "$(openssl passwd -6 '123' | tr -d '\n')"
+    password: $(openssl passwd -6 '123' | tr -d '\n')
 chpasswd:
   list: |
     root:123
