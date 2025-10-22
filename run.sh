@@ -1,1 +1,1 @@
-bash root.sh
+bash vm/root.sh
