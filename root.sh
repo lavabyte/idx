@@ -13,7 +13,7 @@ else
   exit 1
 fi
 if [ ! -e $ROOTFS_DIR/.installed ]; then
-  wget --tries=$max_retries --timeout=$timeout --no-hsts -O rootfs.tar.gz "https://cdimage.ubuntu.com/ubuntu-base/releases/20.04/release/ubuntu-base-20.04.1-base-${ARCH_ALT}.tar.gz"
+  wget --tries=$max_retries --timeout=$timeout --no-hsts -O rootfs.tar.gz "https://cdimage.ubuntu.com/ubuntu-base/releases/24.04/release/ubuntu-base-24.04.3-base-${ARCH_ALT}.tar.gz"
   tar -xf rootfs.tar.gz -C $ROOTFS_DIR
   rm rootfs.tar.gz
   mkdir $ROOTFS_DIR/usr/local/bin -p
