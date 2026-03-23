@@ -4,7 +4,7 @@ if ! dpkg -l wget qemu-system-x86 qemu-utils cloud-image-utils genisoimage >/dev
 fi
 if [[ ! -f "disk.qcow2" ]]; then
     wget -O "disk.qcow2" "https://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
-    qemu-img resize "disk.qcow2" 20G
+    qemu-img resize "disk.qcow2" 16G
 fi
 cat > user-data <<EOF
 #cloud-config
